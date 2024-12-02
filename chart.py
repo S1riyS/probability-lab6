@@ -11,10 +11,6 @@ class Chart:
         self.ax.set_xlabel(x)
         self.ax.set_ylabel(y)
 
-        # box = self.ax.get_position()
-        # self.ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-        # self.ax.legend(loc="upper left", bbox_to_anchor=(1.05, 1.0))
-
     def add_chart(self, name, a, b, h):
         self.setup_values(a, b, h)
         self.ax.plot(self.xs, self.ys, label=name)
