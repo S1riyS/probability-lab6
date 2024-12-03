@@ -1,5 +1,6 @@
+import warnings
+
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 class Chart:
@@ -25,9 +26,12 @@ class Chart:
         self.ax.fill_between(self.xs, self.ys, label=name)
 
     def plot(self, name):
-        self.ax.legend(loc="upper left", bbox_to_anchor=(1.05, 1.0))
-        self.fig.tight_layout()
-        self.fig.savefig(name + ".png")
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=UserWarning)
+
+            self.ax.legend(loc="upper left", bbox_to_anchor=(1.05, 1.0))
+            self.fig.tight_layout()
+            self.fig.savefig(name + ".png")
 
     def setup_values(self, a, b, h):
         self.xs.clear()

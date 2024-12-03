@@ -4,8 +4,10 @@ from probability_theory import ProbabilityTheory
 
 
 def main():
+    elements = []
     with open("input.txt", "r") as file:
-        elements = [float(line.strip()) for line in file]
+        for line in file:
+            elements.extend([float(x) for x in line.split()])
 
     runner = ProbabilityTheory(elements)
 
