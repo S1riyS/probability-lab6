@@ -14,9 +14,21 @@ class ProbabilityTheory:
         self.ni = []
         self.pi = []
 
+        for x in sorted(set(self.values)):
+            count = self.values.count(x)
+            self.xi.append(x)
+            self.ni.append(count)
+            self.pi.append(count / len(self.values))
+
     def get_var_values(self):
         self.values.sort()
         print(f"{PREFIX} Вариационный ряд: {' '.join(map(str, self.values))}")
+
+    def get_stat_values(self):
+        print(f"{PREFIX} Статистический ряд:")
+        print("x\tp\tn")
+        for x, p, n in zip(self.xi, self.pi, self.ni):
+            print(f"{x}\t{p}\t{n}")
 
     def get_extreme_values(self):
         print(f"{PREFIX} MIN = {self.values[0]}")
@@ -25,22 +37,31 @@ class ProbabilityTheory:
     def get_selection_size(self):
         print(f"{PREFIX} Размах выборки {self.values[-1] - self.values[0]}")
 
-    def discrepancy_calculation(self):
-        for x in sorted(set(self.values)):
-            count = self.values.count(x)
-            self.xi.append(x)
-            self.ni.append(count)
-            self.pi.append(count / len(self.values))
+    def get_avg(self):
+        print(f"{PREFIX} Выборочное среднее = {sum(self.values) / len(self.values)}")
 
+    def get_median(self):
+        n = len(self.values)
+        if n % 2 == 1:
+            median = self.values[n // 2]
+        else:
+            median = (self.values[n // 2 - 1] + self.values[n // 2]) / 2
+        print(f"{PREFIX} Медиана = {median}")
+
+    def get_mode(self):
+        mode = self.xi[self.ni.index(max(self.ni))]
+        print(f"{PREFIX} Мода = {mode}")
+
+    def discrepancy_calculation(self):
         expected_value = sum([x * p for x, p in zip(self.xi, self.pi)])
         print(f"{PREFIX} Оценка математического ожидания {expected_value}")
 
         disperancy = sum([p * (x - expected_value) ** 2 for x, p in zip(self.xi, self.pi)])
-        print(f"{PREFIX} Дисперсия {disperancy}")
+        print(f"{PREFIX} Выборочная дисперсия {disperancy}")
         fixed_disperancy = disperancy * len(self.xi) / (len(self.xi) - 1)
-        print(f"{PREFIX} Исправленная дисперсия {fixed_disperancy}")
-        print(f"{PREFIX} Cреднеквадратическоe отклонение {math.sqrt(disperancy)}")
-        print(f"{PREFIX} Исправленное СКО {math.sqrt(fixed_disperancy)}")
+        print(f"{PREFIX} Исправленная выборочная дисперсия {fixed_disperancy}")
+        print(f"{PREFIX} Выборочное среднеквадратическоe отклонение {math.sqrt(disperancy)}")
+        print(f"{PREFIX} Исправленное выборочное СКО {math.sqrt(fixed_disperancy)}")
 
     def get_h(self):
         return (self.values[-1] - self.values[0]) / (1 + math.log2(len(self.values)))
@@ -85,6 +106,22 @@ class ProbabilityTheory:
             x_start += self.get_h()
 
         frequency_polygon.plot("frequency_polygon")
+
+    def get_interval_stat_row(self):
+        print()
+        print(f"{PREFIX} Интервальный стстистический ряд")
+
+        x_start = self.values[0] - self.get_h() / 2
+        for _ in range(self.get_m()):
+            s = 0
+            for value in self.values:
+                if value >= x_start and value < (x_start + self.get_h()):
+                    s += 1
+
+            print(f"[{x_start:.3f}, {x_start + self.get_h():.3f}) -> {s}")
+
+            x_start += self.get_h()
+        print()
 
     def draw_histogram(self, size):
         histogram_chart = Chart("x", "p_i / h", "Гистограмма частот")

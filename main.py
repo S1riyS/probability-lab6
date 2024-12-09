@@ -14,6 +14,14 @@ def main():
     # Variational series
     runner.get_var_values()
 
+    runner.get_stat_values()
+
+    runner.get_interval_stat_row()
+
+    runner.get_avg()
+    runner.get_median()
+    runner.get_mode()
+
     # Extreme values
     runner.get_extreme_values()
 
